@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kablammo&family=Matemasie&family=Sevillana&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <title>FlickWay - Discover Your Next Movie</title>
+</head>
+<body>
+    <div class="video-overlay"></div>
+    <video autoplay muted loop id="backgroundVideo">
+        <source src="Kingsman_ The Golden Circle - First 9 Minutes Opening Scene (2017) - KinoCheck Archive (1080p, h264, youtube) (online-video-cutter.com).mp4"
+        type="video/mp4">
+    
+    </video>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-film"></i>
+            <span>FlickWay</span>
+        </div>
+        <div class="nav-links">
+            <a href="login.html">Login</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="hero-section">
+            <h1 class="title">Discover Your Perfect Movie</h1>
+            <p class="subtitle">Get personalized recommendations based on your favorite genre</p>
+            
+            <div class="genre-selector">
+                <div class="select-wrapper">
+                    <label for="genre">Select Genre</label>
+                    <select name="genre" id="genre" class="genre-select">
+                        <option value="Action">Action</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="Comedy">Comedy</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Horror">Horror</option>
+                        <option value="Musicals">Musicals</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Sci_fy">Science Fiction</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Western">Western</option>
+                    </select>
+                </div>
+                <button onclick="getRecommendations()" id="rec-bttn" class="recommend-btn">
+                    <i class="fas fa-magic"></i>
+                    Get Recommendations
+                </button>
+            </div>
+        </div>
+
+        <div class="recommendations-container">
+            <div id="recommendations" class="recommendations"></div>
+        </div>
+    </main>
+
+    <style>
+        :root {
+            --primary-color: #09e509;
+            --primary-hover: #008917;
+            --background-dark: #141414;
+            --surface-dark: #1f1f1f;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --overlay-color: rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* font-family: 'Poppins', sans-serif; */
+        }
+
+        body {
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        #backgroundVideo {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -2;
+            object-fit: cover;
+        }
+
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(20, 20, 20, 0.8) 0%,
+                rgba(20, 20, 20, 0.9) 100%
+            );
+            z-index: -1;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            font-family: 'Kablammo', cursive;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .main-content {
+            padding-top: 80px;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .genre-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .select-wrapper {
+            width: 100%;
+        }
+
+        .select-wrapper label {
+            display: block;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .genre-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .genre-select:hover,
+        .genre-select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .recommend-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary-color);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .recommend-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .recommendations-container {
+            padding: 1rem;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .recommendations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .movie-card {
+            position: relative;
+            background-color: var(--surface-dark);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-poster {
+            position: relative;
+            width: 100%;
+            padding-top: 5%;
+            overflow: hidden;
+        }
+
+        .movie-poster img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.05);
+        }
+
+        .movie-info {
+            padding: 1.5rem;
+            background: linear-gradient(
+                to top,
+                var(--surface-dark) 0%,
+                rgba(31, 31, 31, 0.9) 100%
+            );
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .movie-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .movie-meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .movie-rating i {
+            color: #ffd700;
+        }
+
+        .movie-year {
+            padding-left: 0.5rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 1200px) {
+            .recommendations {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-section {
+                padding: 2rem 1rem;
+            }
+
+            .recommendations-container {
+                padding: 1rem;
+            }
+
+            .recommendations {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+
+            .movie-info {
+                padding: 1rem;
+            }
+
+            .movie-title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .recommendations {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .movie-info {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+
+    <script src="script.js"></script>
+</body>
+</html>

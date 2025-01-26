@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="login.css">
+    <script type="module" src="login.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js"></script>
+</head>
+<body>
+    <h1>Welcome to Flickway!</h1>
+    <p>Your no.1 movie recommendation hub!</p>
+
+    <div class="form-container" id="signIn">
+        <form>
+            <div id="signInMessage" class="message"></div>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+
+            <button type="button" id="submitSignIn">Login</button>
+
+            <p><a href="#">Recover Password</a></p>
+            <p>Don't have an account? <a id="signUpButton" href="sign-up.html">Sign up here</a></p>
+        </form>
+
+    </div>
+</body>
+</html>

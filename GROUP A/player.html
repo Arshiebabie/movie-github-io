@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlickWay - Watch Movies Online</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kablammo&family=Matemasie&family=Sevillana&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">FlickWay</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search movies...">
+                <i class="fas fa-search"></i>
+            </div>
+            <a href="./index.html"><button class="action-btn" ><i class="fas fa-home" ></i> Back</button></a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="content-wrapper">
+            <!-- Media Player Section -->
+            <section class="media-section">
+                <h1 id="movie-title" class="gradient-text"></h1>
+                <div class="video-container">
+                    <iframe id="movie-trailer" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <p id="movie-description" class="movie-description"></p>
+                <div class="interaction-buttons">
+                    <button class="action-btn"><i class="fas fa-heart"></i> Like</button>
+                    <button class="action-btn"><i class="fas fa-share"></i> Share</button>
+                    <button class="action-btn"><i class="fas fa-bookmark"></i> Save</button>
+                </div>
+            </section>
+
+            <!-- Comments Section -->
+            <section class="comments-section">
+                <h2>Comments <span class="comment-count">(5+)</span></h2>
+                <div class="comment-input-container">
+                    <img src="https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://fdczvxmwwjwpwbeeqcth.supabase.co/storage/v1/object/public/images/e9b68ea9-5883-4334-82f3-9504663a0a86/51360148-a7ad-4e47-9dc0-3b4cae073c24.png" alt="User Avatar" class="user-avatar">
+                    <div class="comment-input-wrapper">
+                        <input type="text" id="comment-input" placeholder="Share your thoughts...">
+                        <button onclick="addComment()" class="submit-btn">Post</button>
+                    </div>
+                </div>
+                <div id="comments" class="comments-container"></div>
+            </section>
+        </div>
+
+        <!-- Recommended Movies Section -->
+        <aside class="recommendations-section">
+            <h2>Recommended for You</h2>
+            <div id="random-movie-list" class="movie-grid"></div>
+        </aside>
+    </main>
+
+    <style>
+        :root {            
+            --primary-color: #09e509;
+            --secondary-color: #008917;
+            /* --primary-hover: #008917; */
+            --background-dark: #141414;
+            --surface-dark: #1f1f1f;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --overlay-color: rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .navbar {
+            background-color: var(--surface-dark);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .nav-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-family: 'Kablammo', cursive;
+            font-weight: bold;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .main-container {
+            max-width: 1440px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .video-container {
+            border-radius: 1rem;
+            overflow: hidden;
+            background-color: var(--surface-dark);
+        }
+
+        .gradient-text {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .movie-description {
+            color: var(--text-secondary);
+            margin: 1rem 0;
+        }
+
+        .interaction-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            background-color: var(--surface-dark);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        .comments-section {
+            background-color: var(--surface-dark);
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
+
+        .comment-input-container {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .comment-input-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        #comment-input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .submit-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            border: none;
+            background-color: var(--primary-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .comments-container {
+            margin-top: 1rem;
+        }
+
+        .comment {
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .recommendations-section {
+            background-color: var(--surface-dark);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            height: fit-content;
+        }
+
+        .movie-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .movie-container {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .movie-container:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-container img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .recommendations-section {
+                order: -1;
+            }
+            
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .interaction-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+
+    <script src="player.js"></script>
+</body>
+</html>
